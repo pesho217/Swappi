@@ -13,12 +13,12 @@ import java.util.Set;
 @AllArgsConstructor
 public class PeopleUpdateRequest {
     private String name;
-    private int height;
-    private double mass;
-    private String hairColor;
-    private String skinColor;
-    private String eyeColor;
-    private String birthYear;
+    private String height;
+    private String mass;
+    private String hair_color;
+    private String skin_color;
+    private String eye_color;
+    private String birth_year;
     @ValidGender(message = "The genders are only 2 - male and female!")
     private String gender;
     private Set<String> species;

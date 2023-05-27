@@ -60,6 +60,9 @@ public class FilmsController {
             throw new InvalidObjectException("Invalid Films Create", validationErrors);
         }
         Films film = filmsMapper.toFilm(filmsCreateRequest);
+        Long totalFilms = filmsService.getTotalFilms();
+        Long index = totalFilms + 1;
+        film.setIndex(index);
         Films savedFilm = filmsService.save(film);
         FilmsResponse filmsResponse = filmsMapper.toFilmResponse(savedFilm);
         return ResponseEntity.status(201).body(filmsResponse);

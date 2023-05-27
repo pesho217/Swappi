@@ -1,11 +1,10 @@
 package com.example.swappi.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,25 +18,38 @@ import java.util.UUID;
 public class Planets {
     @Id
     @GeneratedValue
+    @Setter(value = AccessLevel.NONE)
     private UUID id;
+
+    private Long index;
     private String name;
-    private int rotation_period;
-    private int orbital_period;
-    private long diameter;
+    private String rotation_period;
+    private String orbital_period;
+    private String diameter;
     private String climate;
     private String gravity;
     private String terrain;
     private String surface_water;
-    private long population;
-
-    @ManyToMany(fetch = FetchType.EAGER)
+    private String population;
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     @JsonIgnore
+    private String url;
+    public String getUrl(){
+        return "http://localhost:8080/planets/" + index + "/";
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JsonBackReference
+    @EqualsAndHashCode.Exclude
     @JoinTable(name = "planets_people", joinColumns = @JoinColumn(name = "planets_id"),
     inverseJoinColumns = @JoinColumn(name = "people_id"))
     private Set<People> planetsPeople = new HashSet<>();
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
     @JoinTable(name = "planets_films", joinColumns = @JoinColumn(name = "planets_id"),
     inverseJoinColumns = @JoinColumn(name = "people_id"))
     private Set<Films> planetsFilms = new HashSet<>();

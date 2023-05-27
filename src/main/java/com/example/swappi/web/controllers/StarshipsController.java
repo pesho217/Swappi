@@ -59,6 +59,12 @@ public class StarshipsController {
             throw new InvalidObjectException("Invalid Starship Create", validationErrors);
         }
         Starships starship = starshipsMapper.toStarships(starshipsCreateRequest);
+        starshipsService.connectStarshipsWithFilms(starship,starshipsCreateRequest.getFilmsIds());
+        starshipsService.connectStarshipsWithPeople(starship, starshipsCreateRequest.getCharactersIds());
+
+        Long totalPeople = starshipsService.getTotalStarships();
+        Long index = totalPeople + 1;
+        starship.setIndex(index);
         Starships savedStarship = starshipsService.save(starship);
         StarshipsResponse starshipsResponse = starshipsMapper.toStarshipsResponse(savedStarship);
 

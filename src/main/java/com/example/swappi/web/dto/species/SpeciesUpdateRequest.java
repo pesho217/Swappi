@@ -21,5 +21,4 @@ public class SpeciesUpdateRequest {
     private String created;
     private String edited;
     private String url;
-
 }

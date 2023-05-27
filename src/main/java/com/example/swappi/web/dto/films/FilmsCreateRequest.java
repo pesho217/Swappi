@@ -15,5 +15,10 @@ public class FilmsCreateRequest {
     private String director;
     private String producer;
     private LocalDate releaseDate;
+    private List<String> charactersIds;
+    private List<String> planetsIds;
+    private List<String> vehiclesIds;
+    private List<String> starshipIds;
+    private List<String> speciesIds;
 
 }

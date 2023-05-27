@@ -3,7 +3,6 @@ package com.example.swappi.web.controllers;
 import com.example.swappi.error.InvalidObjectException;
 import com.example.swappi.mapper.PeopleMapper;
 import com.example.swappi.models.People;
-import com.example.swappi.repository.paginationRepos.PeoplePagingRepository;
 import com.example.swappi.service.PeopleService;
 import com.example.swappi.validation.ObjectValidator;
 import com.example.swappi.web.dto.pagination.SwappiPage;
@@ -30,16 +29,21 @@ public class PeopleController {
 
     private final Integer PAGE_SIZE = 10;
 
-    @GetMapping()
+    @GetMapping(name = "", produces = "application/json")
     public SwappiPage<PeopleResponse> getAllPeople(@RequestParam(required = false, defaultValue = "0")Integer currPage){
         Page<PeopleResponse> peoplePage = peopleService.fetchAll(currPage, PAGE_SIZE).map(peopleMapper::toPeopleResponse);
         return new SwappiPage<>(peoplePage);
 
     }
 
+    @DeleteMapping("all")
+    public void deleteAll(){
+        peopleService.deleteAll();
+    }
+
     @DeleteMapping("{peopleId}")
-    public void deletePersonById(@PathVariable String personId){
-        peopleService.deleteById(personId);
+    public void deletePersonById(@PathVariable String peopleId){
+        peopleService.deleteById(peopleId);
     }
 
     @GetMapping("{peopleId}")
@@ -54,8 +58,18 @@ public class PeopleController {
         if (validationErrors.size() != 0) {
             throw new InvalidObjectException("Invalid Person Create", validationErrors);
         }
-        People mappedPerson = peopleMapper.toPeople(peopleCreateRequest);
-        People savedPerson = peopleService.save(mappedPerson);
+        People people = peopleMapper.toPeople(peopleCreateRequest);
+        peopleService.connectPeopleWithPlanets(people, peopleCreateRequest.getHomeworld());
+        peopleService.connectPeopleWithFilms(people, peopleCreateRequest.getFilmIds());
+        peopleService.connectPeopleWithSpecies(people, peopleCreateRequest.getSpeciesIds());
+        peopleService.connectPeopleWithVehicles(people, peopleCreateRequest.getVehiclesIds());
+        peopleService.connectPeopleWithStarships(people, peopleCreateRequest.getStarshipsIds());
+
+        Long totalPeople = peopleService.getTotalPeople();
+        Long index = totalPeople + 1;
+        people.setIndex(index);
+
+        People savedPerson = peopleService.save(people);
         PeopleResponse peopleResponse = peopleMapper.toPeopleResponse(savedPerson);
         return ResponseEntity.status(201).body(peopleResponse);
     }

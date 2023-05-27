@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 @Builder
 public class SpeciesCreateRequest {
+    private String name;
     private String classification;
     private String designation;
     private String average_height;
@@ -15,8 +16,9 @@ public class SpeciesCreateRequest {
     private String hair_colors;
     private String eye_colors;
     private String average_lifespan;
-    private String homeworld;
     private String language;
-
+    private String homeworld;
+    private List<String> charactersIds;
+    private List<String> filmsIds;
 
 }

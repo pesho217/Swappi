@@ -2,10 +2,7 @@ package com.example.swappi.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,8 +16,13 @@ import java.util.UUID;
 public class Species {
     @Id
     @GeneratedValue
+    @Setter(value = AccessLevel.NONE)
     private UUID id;
-
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private String url;
+    private Long index;
+    private String name;
             private String classification;
             private String designation;
             private String average_height;
@@ -28,20 +30,25 @@ public class Species {
             private String hair_colors;
             private String eye_colors;
             private String average_lifespan;
-            private String homeworld;
             private String language;
+        public String getUrl(){
+                return "http://localhost:8080/species/" + index + "/";
+        }
 
             @JsonIgnore
-            @ManyToOne(fetch = FetchType.EAGER)
+            @EqualsAndHashCode.Exclude
+            @ManyToOne(fetch = FetchType.LAZY)
             @JoinColumn(name = "planetId")
             private Planets speciesPlanets;
 
             @JsonIgnore
-            @ManyToMany(fetch = FetchType.EAGER)
+            @EqualsAndHashCode.Exclude
+            @ManyToMany(fetch = FetchType.LAZY)
             private Set<Films> speciesFilms = new HashSet<>();
 
             @JsonIgnore
-            @ManyToMany(fetch = FetchType.EAGER)
+            @EqualsAndHashCode.Exclude
+            @ManyToMany(fetch = FetchType.LAZY)
             @JoinTable(name = "species_people", joinColumns = @JoinColumn(name = "speciesId"),
                     inverseJoinColumns = @JoinColumn(name = "peopleId"))
             private Set<People> speciesPeople = new HashSet<>();

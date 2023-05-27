@@ -2,6 +2,7 @@ package com.example.swappi.web.controllers;
 
 import com.example.swappi.error.InvalidObjectException;
 import com.example.swappi.mapper.PlanetsMapper;
+import com.example.swappi.models.People;
 import com.example.swappi.models.Planets;
 import com.example.swappi.repository.paginationRepos.PlanetsPagingRepository;
 import com.example.swappi.service.PlanetsService;
@@ -45,19 +46,25 @@ public class PlanetsController {
         planetsService.deleteById(planetId);
     }
 
-    @GetMapping("{planetId")
+    @GetMapping("{planetId}")
     public ResponseEntity<PlanetsResponse> getPlanetById(@PathVariable String planetId){
         Planets planets = planetsService.findById(planetId);
         return ResponseEntity.ok(planetsMapper.toPlanetsResponse(planets));
     }
 
     @PostMapping("")
-    public ResponseEntity<PlanetsResponse> createPlanet(PlanetsCreateRequest planetsCreateRequest){
+    public ResponseEntity<PlanetsResponse> createPlanet(@RequestBody PlanetsCreateRequest planetsCreateRequest){
         Map<String,String> validationErrors = validator.validate(planetsCreateRequest);
         if(validationErrors.size()!=0){
             throw new InvalidObjectException("Invalid Planet Create", validationErrors);
         }
         Planets planet = planetsMapper.toPlanets(planetsCreateRequest);
+        planetsService.connectPlanetsWithPeople(planet, planetsCreateRequest.getCharactersIds());
+        planetsService.connectPlanetsWithFilms(planet, planetsCreateRequest.getFilmIds());
+
+        Long totalPeople = planetsService.getTotalPlanets();
+        Long index = totalPeople + 1;
+        planet.setIndex(index);
         Planets savedPlanet = planetsService.save(planet);
         PlanetsResponse planetsResponse = planetsMapper.toPlanetsResponse(savedPlanet);
         return ResponseEntity.status(200).body(planetsResponse);

@@ -59,6 +59,12 @@ public class VehiclesController {
             throw new InvalidObjectException("Invalid Vehicle Create", validationErrors);
         }
         Vehicles vehicle = vehiclesMapper.toVehicles(vehiclesCreateRequest);
+        vehiclesService.connectVehiclesWithFilms(vehicle, vehiclesCreateRequest.getFilmsIds());
+        vehiclesService.connectVehiclesWithPeople(vehicle, vehiclesCreateRequest.getCharactersIds());
+
+        Long totalPeople = vehiclesService.getTotalVehicles();
+        Long index = totalPeople + 1;
+        vehicle.setIndex(index);
         Vehicles savedVehicle = vehiclesService.save(vehicle);
         VehiclesResponse vehiclesResponse = vehiclesMapper.toVehiclesResponse(savedVehicle);
 

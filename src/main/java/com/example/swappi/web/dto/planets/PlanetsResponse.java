@@ -4,21 +4,23 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Builder
 public class PlanetsResponse {
+    private UUID id;
     private String name;
-    private int rotation_period;
-    private int orbital_period;
-    private long diameter;
+    private String rotation_period;
+    private String orbital_period;
+    private String diameter;
     private String climate;
     private String gravity;
     private String terrain;
     private String surface_water;
-    private long population;
-    private List<String> characterUrls;
-    private List<String> filmsUrls;
+    private String population;
+    private List<String> characters;
+    private List<String> films;
     private String created;
     private String edited;
     private String url;

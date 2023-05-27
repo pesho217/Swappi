@@ -8,5 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface PlanetRepository extends CrudRepository<Planets, UUID> {
+    long count();
 
 }

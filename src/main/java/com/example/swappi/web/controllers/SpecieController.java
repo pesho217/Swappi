@@ -1,18 +1,11 @@
 package com.example.swappi.web.controllers;
 
 import com.example.swappi.error.InvalidObjectException;
-import com.example.swappi.mapper.PlanetsMapper;
 import com.example.swappi.mapper.SpeciesMapper;
-import com.example.swappi.models.Planets;
 import com.example.swappi.models.Species;
-import com.example.swappi.repository.modelsRepos.SpeciesRepository;
-import com.example.swappi.service.PlanetsService;
 import com.example.swappi.service.SpeciesService;
 import com.example.swappi.validation.ObjectValidator;
 import com.example.swappi.web.dto.pagination.SwappiPage;
-import com.example.swappi.web.dto.planets.PlanetsCreateRequest;
-import com.example.swappi.web.dto.planets.PlanetsResponse;
-import com.example.swappi.web.dto.planets.PlanetsUpdateRequest;
 import com.example.swappi.web.dto.species.SpeciesCreateRequest;
 import com.example.swappi.web.dto.species.SpeciesResponse;
 import com.example.swappi.web.dto.species.SpeciesUpdateRequest;
@@ -49,22 +42,30 @@ public class SpecieController {
         speciesService.deleteById(specieId);
     }
 
-    @GetMapping("{specieId")
-    public ResponseEntity<SpeciesResponse> getPlanetById(@PathVariable String specieId) {
+    @GetMapping("{specieId}")
+    public ResponseEntity<SpeciesResponse> getSpecieById(@PathVariable String specieId) {
         Species species = speciesService.findById(specieId);
         return ResponseEntity.ok(speciesMapper.toSpeciesResponse(species));
     }
 
     @PostMapping("")
-    public ResponseEntity<SpeciesResponse> createPlanet(SpeciesCreateRequest speciesCreateRequest) {
+    public ResponseEntity<SpeciesResponse> createSpecie(@RequestBody SpeciesCreateRequest speciesCreateRequest) {
         Map<String, String> validationErrors = validator.validate(speciesCreateRequest);
         if (validationErrors.size() != 0) {
             throw new InvalidObjectException("Invalid Specie Create", validationErrors);
         }
         Species specie = speciesMapper.toSpecies(speciesCreateRequest);
+
+        speciesService.connectSpeciesWithPlanets(specie,speciesCreateRequest.getHomeworld());
+        speciesService.connectSpeciesWithFilms(specie, speciesCreateRequest.getFilmsIds());
+        speciesService.connectSpeciesWithPeople(specie, speciesCreateRequest.getCharactersIds());
+
+        Long totalPeople = speciesService.getTotalSpecies();
+        Long index = totalPeople + 1;
+        specie.setIndex(index);
         Species savedSpecie = speciesService.save(specie);
         SpeciesResponse speciesResponse = speciesMapper.toSpeciesResponse(savedSpecie);
-        return ResponseEntity.status(200).body(speciesResponse);
+        return ResponseEntity.status(201).body(speciesResponse);
     }
 
     @PatchMapping("{specieId}")

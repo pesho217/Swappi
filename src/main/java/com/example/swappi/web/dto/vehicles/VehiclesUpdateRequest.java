@@ -11,12 +11,12 @@ public class VehiclesUpdateRequest {
     private String name;
     private String model;
     private String manufacturer;
-    private long cost_in_credits;
-    private double length;
-    private int max_atmosphering_speed;
-    private int crew;
+    private String cost_in_credits;
+    private String length;
+    private String max_atmosphering_speed;
+    private String crew;
     private String passengers;
-    private long cargo_capacity;
+    private String cargo_capacity;
     private String consumables;
     private String vehicle_class;
     private List<String> filmsUrls;

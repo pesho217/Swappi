@@ -8,6 +8,7 @@ public class SwappiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SwappiApplication.class, args);
+
 	}
 
 }

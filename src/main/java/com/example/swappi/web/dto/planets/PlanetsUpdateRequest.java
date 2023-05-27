@@ -8,14 +8,14 @@ import java.util.List;
 @Builder
 public class PlanetsUpdateRequest {
     private String name;
-    private int rotation_period;
-    private int orbital_period;
-    private long diameter;
+    private String rotation_period;
+    private String orbital_period;
+    private String diameter;
     private String climate;
     private String gravity;
     private String terrain;
     private String surface_water;
-    private long population;
+    private String population;
     private List<String> characterUrls;
     private List<String> filmsUrls;
 }

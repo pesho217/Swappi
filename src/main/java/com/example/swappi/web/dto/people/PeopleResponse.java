@@ -11,14 +11,16 @@ import java.util.UUID;
 @Builder
 public class PeopleResponse {
 
+    private UUID id;
     private String name;
-    private String birth_Year;
-    private int height;
-    private double mass;
+    private String birth_year;
+    private String height;
+    private String mass;
     private String gender;
     private String hair_color;
     private String eye_color;
     private String skin_color;
+    private  String homeworld;
     private List<String> films;
     private List<String> species;
     private List<String> vehicles;
@@ -26,4 +28,5 @@ public class PeopleResponse {
     private String created;
     private String edited;
     private String url;
+
 }
